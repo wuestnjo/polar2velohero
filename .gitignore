@@ -1,0 +1,5 @@
+*.json
+*.log
+*.tcx
+__pycache__
+!data/users-example.json

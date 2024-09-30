@@ -1,0 +1,64 @@
+{
+    "johannes": {
+        "polar_access_token": "asdf1234--token-from-polar",
+        "polar_user_id": 1234567890,        
+        "velohero_sso": "sdfg2345--sso-from-velohero",
+        
+        "mapping": {
+            "RUNNING": {
+                "Sport": "Laufsport",
+                "type_id": 34843,
+                "equipment_ids": [23885],
+                "Comment": " < comment only for here and the logs of the scraper - no transfer to velohero > "
+            },
+            "CROSS_COUNTRY_RUNNING": {
+                "Sport": "Laufsport",
+                "type_id": 117045,
+                "equipment_ids": [23108],
+                "Comment": "Crossrun with Salomon Speedcross"
+            },
+            "HIKING": {
+                "Sport": "Wandern",
+                "type_id": 52058,
+                "equipment_ids": [19000],
+                "Comment": "Proper hiking with the big boots"
+            },
+            "ROAD_BIKING": {
+                "Sport": "Radsport", 
+                "type_id": 67273,
+                "equipment_ids": [22979],
+                "Comment": "road race biking"
+            },
+            "CYCLING": {
+                "Sport": "Radsport", 
+                "type_id": 52069,
+                "equipment_ids": [24087],
+                "Comment": "bike commuting"
+            },
+            "STRENGTH_TRAINING": {
+                "Sport": "Krafttraining",
+                "type_id": 52054,
+                "equipment_ids": [],
+                "Comment": "weights"
+            },
+            "WATERSPORTS_KAYAKING": {
+                "Sport": "Wassersport",
+                "type_id": 77627,
+                "equipment_ids": [23695, 22978],
+                "Comment": "whitewater kayaking"
+            },
+            "OPEN_WATER_SWIMMING": {
+                "Sport": "Wassersport",
+                "type_id": 52049,
+                "equipment_ids": [23695, 22978, 23109],
+                "Comment": "alpine whitewater kayaking"
+            },
+            "RUGBY": {
+                "Sport": "Ballsport",
+                "type_id": 120904,
+                "equipment_ids": [],
+                "Comment": " "
+            }
+        }
+    }
+}

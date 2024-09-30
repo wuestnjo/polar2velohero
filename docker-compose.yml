@@ -1,0 +1,10 @@
+services:
+  polar-sync:
+    build: .
+    container_name: polar-sync
+    command: ["python", "sync.py"]
+    volumes:
+      - ./data:/data
+    environment: 
+      - DATA_DIR=/data
+    restart: no
