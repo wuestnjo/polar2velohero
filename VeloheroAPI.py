@@ -28,7 +28,7 @@ def getSportID(name):
     else:
         print(f"{name} not found in mapping (Defaulting to misc category Pedelec!")
         return 12
-    
+
 
 
 class Client():
@@ -36,11 +36,11 @@ class Client():
     def __init__(self, sso):
         self.sso = sso
         self.cachedVHpages = {}
-    
+
     def uploadFile(self, filePath):
         r = requests.post('http://app.velohero.com/upload/file/',
         params={'view': 'json', 'sso': self.sso, 'submit': '1'},
-        files={'file': open(filePath, 'rb')})
+        files={'file': open(filePath, 'rb')}, timeout=10)
 
         if (r.status_code == 200) and ("id" in r.json().keys()):
             # Parse Workout ID from JSON
@@ -53,7 +53,7 @@ class Client():
 
 
     def CreateWorkout(self, filePath, mapping):
-        
+
         sport_id = type_id = ''
         equipment_ids = '[]'
 
@@ -65,7 +65,7 @@ class Client():
                 equipment_ids = mapping["equipment_ids"]
 
             print(f'Mapping applied: {mapping["Sport"]}->{sport_id}|{type_id}|{equipment_ids}')
-        
+
         ID = self.uploadFile(filePath)
         self.editWorkoutType(ID, sport_id, type_id, equipment_ids)
 
@@ -85,10 +85,12 @@ class Client():
                 'view': 'json',
                 'sport_id': sport_id,
                 'type_id': type_id,
-                'equipment_ids': equipment_ids}
+                'equipment_ids': equipment_ids
+        }
 
-        velohero_edit = requests.get('http://app.velohero.com/workouts/change/' + str(ID), params=params)
-            
+        velohero_edit = requests.get('http://app.velohero.com/workouts/change/' + str(ID), 
+                                     params=params, timeout=10)
+
 
 
     def updateWorkout(self, ID, **kwargs):
@@ -98,7 +100,7 @@ class Client():
         '''
         
         workout = requests.get('http://app.velohero.com/export/workouts/json?workout_id=' + str(ID-1),
-                           params={'sso': self.sso}).json()['workouts'][0]
+                           params={'sso': self.sso}, timeout=10).json()['workouts'][0]
         updatedFields = dict(kwargs.items())
 
         print(f'Updated fields: {updatedFields}')
@@ -140,33 +142,36 @@ class Client():
 
         params['sso'] = self.sso
         params['submit'] = 1
-        editData = requests.get('http://app.velohero.com/workouts/edit/' + str(ID), params=params)
+        editData = requests.get('http://app.velohero.com/workouts/edit/' + str(ID), 
+                                params=params, timeout=10)
         content = editData.content
 
 
         return
-             
+
 
     def _addWeather(self, ID):
         workout = requests.get('http://app.velohero.com/export/workouts/json?workout_id=' + str(ID-1),
-                           params={'sso': self.sso}).json()['workouts'][0]
+                           params={'sso': self.sso}, timeout=10).json()['workouts'][0]
 
         duration = datetime.strptime(workout['dur_time'], "%H:%M:%S")
         delta = timedelta(hours=duration.hour, minutes=duration.minute)
-        
-        middleTimestamp = datetime.strptime(f"{workout['date_ymd']} {workout['start_time']}", "%Y-%m-%d %H:%M:%S")+delta/2
+
+        middleTimestamp = datetime.strptime(f"{workout['date_ymd']} {workout['start_time']}", 
+                                            "%Y-%m-%d %H:%M:%S")+delta/2
 
         if datetime.now()-middleTimestamp > timedelta(hours=3):
             return
-        
 
-        weatherdata = requests.get('http://app.velohero.com/openweathermap/' + str(ID), params={'sso': self.sso})
-         
+
+        weatherdata = requests.get('http://app.velohero.com/openweathermap/' + str(ID), 
+                                   params={'sso': self.sso}, timeout=10)
+
         self.updateWorkout(ID,
             weather_id = weatherdata.json()['weather'],
             temp_c = weatherdata.json()['temp_c'],
             wind_bft = weatherdata.json()['wind_bft'])
-        
+
 
     # def fixAltitude(self, ID, ascent, descent):
     #     self.updateWorkout(ID, asc_m = ascent, dsc_m = descent)

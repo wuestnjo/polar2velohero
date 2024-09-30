@@ -24,7 +24,7 @@ def simpleLog(username, message):
 
 if __name__ == "__main__":
     data_dir = os.environ.get("DATA_DIR", "./data")
-    
+
     config = load_config(f"{data_dir}/users.json")
 
     for username in config.keys():
@@ -36,7 +36,7 @@ if __name__ == "__main__":
         ## Collect Workouts from Polar
         polar_access_token = config[username]["polar_access_token"]
         polar_user_id = config[username]["polar_user_id"]
-        
+
         PFC = PolarFlowAPI.Client(polar_access_token, polar_user_id, user_data_dir)
         PFC.collectWorkouts()
 
@@ -56,7 +56,7 @@ if __name__ == "__main__":
                     map = mapping[activityType]
                 else:
                     map = None
-            
+
                 vhID = VHC.CreateWorkout(f"{user_data_dir}/{fname}", map)
 
                 os.rename(f"{user_data_dir}/{fname}", f"{user_data_dir}/archive/{fname}")

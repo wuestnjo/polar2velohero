@@ -1,5 +1,3 @@
-
-
 import requests
 import json 
 
@@ -18,9 +16,9 @@ class Client():
 
         ## get transaction ID of new workouts 
         r = requests.post(
-            f'https://www.polaraccesslink.com/v3/users/{self.user_id}/exercise-transactions', 
-            headers = {'Accept': 'application/json',  'Authorization': f'Bearer {self.access_token}'}
-        )
+            f'https://www.polaraccesslink.com/v3/users/{self.user_id}/exercise-transactions',
+            headers = {'Accept': 'application/json', 'Authorization': f'Bearer {self.access_token}'},
+            timeout=10)
         if r.status_code == 201:
             transaction_id = json.loads(r.content)['transaction-id']
         elif r.status_code == 204:
@@ -35,9 +33,9 @@ class Client():
 
         ## list exercises
         r = requests.get(
-            f'https://www.polaraccesslink.com/v3/users/{self.user_id}/exercise-transactions/{transaction_id}', 
-            headers = {'Accept': 'application/json',  'Authorization': f'Bearer {self.access_token}'}
-        )
+            f'https://www.polaraccesslink.com/v3/users/{self.user_id}/exercise-transactions/{transaction_id}',
+            headers = {'Accept': 'application/json',  'Authorization': f'Bearer {self.access_token}'},
+            timeout=10)
         if r.status_code == 200:
             exercise_urls = json.loads(r.content)['exercises']
         else:
@@ -45,7 +43,10 @@ class Client():
 
         ## get exercise summary
         for exercise_url in exercise_urls:
-            r = requests.get(exercise_url, headers = {'Accept': 'application/json',  'Authorization': f'Bearer {self.access_token}'})
+            r = requests.get(
+                exercise_url,
+                headers = {'Accept': 'application/json',  'Authorization': f'Bearer {self.access_token}'},
+                timeout=10)
             if r.status_code == 200:
 
                 ## collect metadata
@@ -57,7 +58,10 @@ class Client():
 
                 ## download tcx
                 fname = f"{timestamp}-{activityType}.tcx"
-                tcx_file = requests.get(f'{exercise_url}/tcx', headers = {'Accept': 'application/vnd.garmin.tcx+xml',  'Authorization': f'Bearer {self.access_token}'})
+                tcx_file = requests.get(
+                    f'{exercise_url}/tcx', 
+                    headers = {'Accept': 'application/vnd.garmin.tcx+xml',  'Authorization': f'Bearer {self.access_token}'},
+                    timeout=10)
                 if tcx_file.status_code == 200:
                     filePath = f"{self.data_dir}/{fname}"
                     with open(filePath, 'wb') as f:
@@ -69,5 +73,5 @@ class Client():
         ## commit transaction
         r = requests.put(
             f'https://www.polaraccesslink.com/v3/users/{self.user_id}/exercise-transactions/{transaction_id}',
-            headers = {'Accept': 'application/json',  'Authorization': f'Bearer {self.access_token}'}
-        )
+            headers = {'Accept': 'application/json',  'Authorization': f'Bearer {self.access_token}'},
+            timeout=10)
